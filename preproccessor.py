@@ -2,7 +2,6 @@
 from __future__ import division
 
 import numpy as np
-from tabulate import tabulate
 import scipy.stats as stats
 from progress.bar import Bar
 
