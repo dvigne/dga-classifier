@@ -11,7 +11,7 @@ np.set_printoptions(threshold='nan')
 
 fileName = "data/sampledga.csv"
 csvArray = [None]
-progBar = Bar('Load CSV', max=5)
+progBar = Bar('Load CSV', max=6)
 def readCSV():
     global csvArray
     file = open(fileName, "r")
@@ -67,9 +67,20 @@ def calculateNGram():
         dupArray[x] = countLetters(csvArray[x][1], 0, 0)
     csvArray = np.column_stack([csvArray, dupArray])
 
+def calculateNumbers():
+    global csvArray
+    capitalArray = np.zeros(csvArray.shape[0], dtype=np.int8)
+    for x in range(0, csvArray.shape[0]):
+        capitalCount = 0
+        for y in range(0, len(csvArray[x][1])):
+            if(ord(csvArray[x][1][y]) >= 48 and ord(csvArray[x][1][y]) <= 57):
+                capitalCount += 1
+        capitalArray[x] = capitalCount
+    csvArray = np.column_stack([csvArray, capitalArray])
+
 def writeCSV():
     file = open("finished.csv", "w")
-    file.write('"host","domain","tld","class","subclass","length","vowels","consonants","ngram","entropy"\n')
+    file.write('"host","domain","tld","class","subclass","length","vowels","consonants","ngram","entropy","numbers"\n')
     for x in range(0, csvArray.shape[0]):
         for y in range(0, csvArray.shape[1]):
             file.write(csvArray[x][y] + ",")
@@ -90,6 +101,9 @@ calculateNGram()
 progBar.message = "Calculate Entropy"
 progBar.next()
 calculateEntropy()
+progBar.message = "Calculate Number Count"
+progBar.next()
+calculateNumbers()
 progBar.message = "write Back"
 progBar.next()
 writeCSV()
