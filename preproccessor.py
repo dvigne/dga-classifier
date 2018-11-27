@@ -52,12 +52,19 @@ def calculateVCRatio():
         vcArray.append([vowelCount, consonantCount])
     csvArray = np.column_stack([csvArray, vcArray])
 
+def countLetters(letter, ngramCount, position):
+    ngramCount = ngramCount
+    if(position == len(letter) - 1):
+        return ngramCount
+    elif(letter[position] == letter[position + 1]):
+        ngramCount = ngramCount + 1
+    return countLetters(letter, ngramCount, position + 1)
+
 def calculateNGram():
     global csvArray
     dupArray = np.zeros(csvArray.shape[0], dtype=np.int8)
     for x in range(0, csvArray.shape[0]):
-        for y in range(0, len(csvArray[x][1])):
-            dupArray[x] += csvArray[x][1].count(csvArray[x][1][y]) - 1
+        dupArray[x] = countLetters(csvArray[x][1], 0, 0)
     csvArray = np.column_stack([csvArray, dupArray])
 
 def writeCSV():
@@ -70,7 +77,7 @@ def writeCSV():
     file.close()
 
 readCSV()
-# csvArray.reshape(6,-1)
+csvArray.reshape(5,-1)
 progBar.message = "Calculate Length"
 progBar.next()
 calculateLength()
