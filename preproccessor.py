@@ -40,7 +40,7 @@ def calculateLength():
 
 def calculateVCRatio():
     global csvArray
-    vcArray = []
+    vcArray = np.zeros(csvArray.shape[0])
     for x in range(0, csvArray.shape[0]):
         vowelCount = 0
         vowelCount += csvArray[x][1].count('a')
@@ -49,7 +49,7 @@ def calculateVCRatio():
         vowelCount += csvArray[x][1].count('o')
         vowelCount += csvArray[x][1].count('u')
         consonantCount = int(csvArray[x][5]) - vowelCount
-        vcArray.append([vowelCount, consonantCount])
+        vcArray[x] = vowelCount / consonantCount
     csvArray = np.column_stack([csvArray, vcArray])
 
 def countLetters(letter, ngramCount, position):
@@ -80,7 +80,7 @@ def calculateNumbers():
 
 def writeCSV():
     file = open("finished.csv", "w")
-    file.write('"host","domain","tld","class","subclass","length","vowels","consonants","ngram","entropy","numbers"\n')
+    file.write('"host","domain","tld","class","subclass","length","vc-ratio","ngram","entropy","numbers"\n')
     for x in range(0, csvArray.shape[0]):
         for y in range(0, csvArray.shape[1]):
             file.write(csvArray[x][y] + ",")
